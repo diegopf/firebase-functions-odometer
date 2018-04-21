@@ -17,11 +17,14 @@ exports.calculateTotal = functions.firestore
       .then(data => {
         const docs = [];
         data.forEach(d => docs.push(d.data()));
-        const total = docs.map(d => d.distance).reduce((a, b) => (a += b));
+        const totalDistance = docs
+          .map(d => d.distance)
+          .reduce((a, b) => (a += b));
+        const totalTrips = docs.length;
         return firestore
           .collection("/stats")
           .doc(document.userId)
-          .set({ total });
+          .set({ totalDistance, totalTrips });
       })
       .catch(error => {
         console.error(error);
